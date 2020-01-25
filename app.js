@@ -37,7 +37,7 @@ var budgetController = (function() {
         });
         // data.allItems[type] = sum;   this is the bug !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         data.totals[type] = sum;
-    }
+    };
 
     return {
         addItem: function(type, des, val) {
@@ -51,6 +51,18 @@ var budgetController = (function() {
             else if (type === 'inc') { newItem = new Income(ID, des, val);  }
             data.allItems[type].push(newItem);      // push it into our data structure
             return newItem;         // so whoever called this method , gets direct access to this new created object.
+        },
+
+        deleteItem: function(type, id) {
+            var ids , index;
+            ids = data.allItems[type].map(function(current) {  // it creates a new array with the same length as the original one m and assign it new value (in this case y the same values)
+                return current.id;
+            });
+
+            index = ids.indexOf(id);   // return -1 , if id not found !
+            if(index !== -1) {
+                data.allItems[type].splice(index, 1)
+            }
         },
 
         calculateBudget: function() {
@@ -91,7 +103,8 @@ var UIController = (function() {
         budgetLabel: '.budget__value',
         incomeLabel: '.budget__income--value',
         expensesLabel: '.budget__expenses--value',
-        percentageLabel: '.budget__expenses--percentage'
+        percentageLabel: '.budget__expenses--percentage',
+        container: '.container'
     }
 
     return {
@@ -138,11 +151,11 @@ var UIController = (function() {
 
             if(type === 'inc') {
                 element = DOMStrings.incomeContainer;
-                html = '<div class="item clearfix" id="income-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
+                html = '<div class="item clearfix" id="inc-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
             }
             else if(type === 'exp') {
                 element = DOMStrings.expensesContainer;
-                html = '<div class="item clearfix" id="expense-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
+                html = '<div class="item clearfix" id="exp-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
             }
 
             //replace the place holder text with actual data
@@ -152,7 +165,13 @@ var UIController = (function() {
 
             //insert HTML into the DOM
             document.querySelector(element).insertAdjacentHTML('beforeend' , newHtml);  // inserted as a last child of the element. 
+        },
+
+        deleteListItem: function(selectorID) {
+            var el = document.getElementById(selectorID);  
+            el.parentNode.removeChild(el);      // because the element cant delete itself !
         }
+
     }
 
 })();
@@ -165,7 +184,8 @@ var controller = (function(budgetCtrl , UICtrl) {
         var DOM = UICtrl.getDOMStrings();
         document.querySelector(DOM.inputBtn).addEventListener('click' , ctrlAddItem);
         document.addEventListener('keypress', function(event){ if(event.keyCode == 13) { ctrlAddItem(); }  });
-    }
+        document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
+    };
 
 
     var updateBudget = function() {
@@ -174,7 +194,7 @@ var controller = (function(budgetCtrl , UICtrl) {
         var budget = budgetCtrl.getBudget();
         // console.log(budget);
         UICtrl.displayBudget(budget);
-    }
+    };
 
     var ctrlAddItem = function() {  // this method is called only upon the click event.
         var input, newItem;
@@ -191,7 +211,26 @@ var controller = (function(budgetCtrl , UICtrl) {
             updateBudget(); 
         }
 
-    } 
+    };
+
+    var ctrlDeleteItem = function(event) {
+        var itemID , splitID, type, ID;
+        itemID =  event.target.parentNode.parentNode.parentNode.parentNode.id ;
+
+        if(itemID) {  // is the id defined ?
+            splitID = itemID.split('-');
+            type = splitID[0];
+            ID   = parseInt(splitID[1]);
+
+            // delete the item from data structure
+            budgetCtrl.deleteItem(type, ID);
+            // delete item from the ui
+            UICtrl.deleteListItem(itemID);
+            // update and show new budget
+            updateBudget();
+        }
+
+    };
 
     return {
         init: function() {
