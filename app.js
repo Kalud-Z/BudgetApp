@@ -9,7 +9,15 @@ var budgetController = (function() {
         this.id = id;
         this.description = description;
         this.value = value;
+        this.percentage = -1;
     };
+
+    Expense.prototype.calcPercentage = function(totalIncome) {
+        if(totalIncome > 0) { this.percentage = Math.round((this.value / totalIncome) * 100); } 
+        else { this.percentage = -1; }
+    }
+
+    Expense.prototype.getPercentage = function() { return this.percentage; }
     
     var Income = function(id, description, value) {
         this.id = id;
@@ -66,10 +74,11 @@ var budgetController = (function() {
         },
 
         calculateBudget: function() {
-            calculateTotal('inc');
             calculateTotal('exp');
+            calculateTotal('inc');
             data.budget = data.totals.inc - data.totals.exp;
-            data.percentage = Math.round((data.totals.exp / data.totals.inc) * 100);
+            if(data.allItems.inc > 0) { data.percentage = Math.round((data.totals.exp / data.totals.inc) * 100); }
+            else { data.percentage = -1; }
         },
 
         getBudget: function() {
@@ -79,6 +88,19 @@ var budgetController = (function() {
                 totalExp : data.totals.exp,
                 percentage: data.percentage
             }
+        },
+
+        calculatePercentages: function() {   // each time we add a new item. all the .percentage of exp get recalculated. however their values wont change if the income didnt change.
+            data.allItems.exp.forEach(function(cur) {
+                cur.calcPercentage(data.totals.inc);
+            });
+        },
+
+        getPercentages: function() {
+            var allPerc = data.allItems.exp.map(function(cur) { // each time a new item is added. we will create a new array , made of the .percentages of exp 
+                return cur.getPercentage();
+            });
+            return allPerc;
         },
 
         test: function(){  // just for testing purposes , u can delete it
@@ -104,7 +126,8 @@ var UIController = (function() {
         incomeLabel: '.budget__income--value',
         expensesLabel: '.budget__expenses--value',
         percentageLabel: '.budget__expenses--percentage',
-        container: '.container'
+        container: '.container',
+        expensesPercLabel: '.item__percentage'
     }
 
     return {
@@ -136,12 +159,29 @@ var UIController = (function() {
             document.querySelector(DOMStrings.incomeLabel).textContent = obj.totalInc + '€';
             document.querySelector(DOMStrings.expensesLabel).textContent = obj.totalExp + '€';
 
-            /* if(obj.percentage <= 0) { document.querySelector(DOMStrings.percentageLabel).textContent = '---'; }
-            else { document.querySelector(DOMStrings.percentageLabel).textContent = obj.percentage + '%'; }
- */
+            // if(obj.percentage == Infinity) { document.querySelector(DOMStrings.percentageLabel).textContent = '---'; }
+            // else { document.querySelector(DOMStrings.percentageLabel).textContent = obj.percentage + '%'; }
 
-            if(obj.percentage == Infinity) { document.querySelector(DOMStrings.percentageLabel).textContent = '---'; }
-            else { document.querySelector(DOMStrings.percentageLabel).textContent = obj.percentage + '%'; }
+            
+            if(obj.percentage > 0) { document.querySelector(DOMStrings.percentageLabel).textContent = obj.percentage + '%'; }
+            else { document.querySelector(DOMStrings.percentageLabel).textContent = '---'; }
+
+
+        },
+
+        displayPercentages: function(percentages) {  // argument : array of all the .percentage of exp
+            var fields = document.querySelectorAll(DOMStrings.expensesPercLabel); // list of all the target nodes.
+
+            var nodeListForEach = function(list , callback) {
+                for(var i = 0; i < list.length ; i++) {
+                    callback(list[i], i);
+                }
+            };
+
+            nodeListForEach(fields, function(current,index) {
+                if(percentages[index] > 0) { current.textContent = percentages[index] + '%'; }
+                else { current.textContent = '---'; }
+            });
 
         },
 
@@ -176,6 +216,7 @@ var UIController = (function() {
 
 })();
 
+
 // ######################################################################################################################
 //  GLOBAL APP CONTROLLER ###############################################################################################
 var controller = (function(budgetCtrl , UICtrl) {
@@ -187,7 +228,6 @@ var controller = (function(budgetCtrl , UICtrl) {
         document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
     };
 
-
     var updateBudget = function() {
         // calculate the budget and dislay it on the UI
         budgetCtrl.calculateBudget();
@@ -196,19 +236,27 @@ var controller = (function(budgetCtrl , UICtrl) {
         UICtrl.displayBudget(budget);
     };
 
+    var updatePercentages = function() {
+        //calculate %
+        budgetCtrl.calculatePercentages();
+        //read % from budget controller
+        var percentages = budgetCtrl.getPercentages(); // return a freshly created array with all the .percentages of all the exp
+        //update the UI with the new %
+        UICtrl.displayPercentages(percentages);
+
+    }
+
     var ctrlAddItem = function() {  // this method is called only upon the click event.
         var input, newItem;
         input = UICtrl.getInput();   // extract the input added by the user
 
         if(input.description !== '' && !isNaN(input.value) && input.value > 0) {
-            // add the item the budget controller
+        
             newItem = budgetCtrl.addItem(input.type, input.description, input.value);
-            // add the item to the UI 
             UICtrl.addListItem(newItem, input.type);
-            // clear field
             UICtrl.clearFields();
-
             updateBudget(); 
+            updatePercentages();
         }
 
     };
@@ -236,7 +284,6 @@ var controller = (function(budgetCtrl , UICtrl) {
         init: function() {
             console.log('the app started');
             setupEventListeners();
-
         }
     }
 

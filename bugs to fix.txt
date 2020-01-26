@@ -1,0 +1,2 @@
+when you delete all items , the expenses percentage = NAN.
+fix it !
