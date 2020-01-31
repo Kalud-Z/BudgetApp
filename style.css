@@ -7,7 +7,7 @@
     padding: 0;
     box-sizing: border-box;
 
-    border:1px solid red;   
+    /* border:1px solid red;    */
 }
 
 html {
@@ -118,7 +118,7 @@ body {
 
 .budget__income--value,
 .budget__expenses--value {
-    letter-spacing: 1rem;
+    letter-spacing: .1rem;
     float: left;
 }
 
