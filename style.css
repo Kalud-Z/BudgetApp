@@ -10,26 +10,9 @@
     /* border:1px solid red;    */
 }
 
+
 html {
     font-size: 62.5%;  /* this is the root font-size ! | and = 62.5% of the default browser font-size which is usually 16px ==> final value 10px */ 
-}
-
-
-@media only screen and (max-width:768px) {
-    html {
-        font-size: 45.5%;
-    }
-
-    .item__percentage {
-         margin-left: .75rem;
-        }
-}
-
-
-@media only screen and (max-width:600px) {
-    html {
-        font-size: 48%;
-    }
 }
 
 
@@ -62,7 +45,8 @@ body {
 **********************************************/
 
 .top {
-    height: 40vh;
+    /* height: 40vh; */
+    height: auto;
     background-image: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url(back.png);
     background-size: cover;
     background-position: center;
@@ -70,12 +54,12 @@ body {
 }
 
 .budget {
-    position: absolute;
     width: 35rem;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #fff;
+    color: #fff; 
+    margin: 0 auto;
+
+    padding-top: 2%;
+    padding-bottom: 2%;
 }
 
 .budget__title {
@@ -216,12 +200,14 @@ body {
     float: left;
     width: 40%;
     margin-left: 6.6%;
+    overflow-y: auto;
 }
 
 .expenses {
     float: left;
     width: 40%;
     margin-left: 6.6%;
+    overflow-y: auto;
 }
 
 h2 {

@@ -1,0 +1,82 @@
+
+
+/* ################################################################################################# */
+@media only screen and (max-width:768px) {
+    html {
+        font-size: 45.5%;
+    }
+
+    .item__percentage {
+         margin-left: .75rem;
+        }
+}
+
+
+
+
+
+
+/* ################################################################################################# */
+
+@media only screen and (max-width:600px) {
+    html {
+        font-size: 48%;
+    }
+}
+
+
+
+
+
+
+
+/* ################################################################################################# */
+
+@media only screen and (max-width:360px) {
+   
+    .top {
+        height: auto;
+    }
+
+    .budget {
+        padding-top: 5%;
+        padding-bottom: 5%;
+    }
+
+    .add {
+        padding: 0rem;
+    }
+
+    .add__container { width : 99%;}
+
+
+    
+    .add__type {
+        width: 4.5rem;
+        height: 3.4rem;
+        font-size: 1.6rem;
+    }
+
+    .add__description {
+        width: 19rem;
+    }
+
+    .add__value {
+        width: 8rem;
+    }
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
