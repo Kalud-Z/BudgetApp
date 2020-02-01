@@ -167,7 +167,7 @@ body {
 .add__value { width: 10rem;}
 
 .add__btn {
-    font-size: 3.5rem;
+    /* font-size: 3.5rem; */
     background: none;
     border: none;
     color: #28B9B5;
@@ -188,6 +188,13 @@ body {
 }
 
 .add__btn:focus { outline: none; }
+
+
+
+.icon-check-kf {
+    color: red;
+}
+
 
 /***** LISTS *****/
 .container {
