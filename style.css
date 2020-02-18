@@ -48,7 +48,7 @@ body {
     /* height: 40vh; */
     height: auto;
     /* background-image: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url(back.png); */
-    background-image: linear-gradient(rgba(0, 0, 0, 0.459), rgba(0, 0, 0, 0.041)), url(calc.jpg);
+    background-image: linear-gradient(rgba(0, 0, 0, 0.459), rgba(0, 0, 0, 0.041)), url(img/calc.jpg);
     /* background-image: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url(wall.jpg); */
     background-size: cover;
     background-position: center;
