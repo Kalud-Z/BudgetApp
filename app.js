@@ -214,11 +214,15 @@ var UIController = (function() {
 
             if(type === 'inc') {
                 element = DOMStrings.incomeContainer;
-                html = '<div class="item clearfix" id="inc-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
+            
+                html = '<div class="item clearfix" id="inc-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><svg class="cancel__logo">  <use xlink:href="img/symbol-defs.svg#icon-cancel-circle"></use> </svg></button></div></div></div>'
+                // html = '<div class="item clearfix" id="inc-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
             }
             else if(type === 'exp') {
                 element = DOMStrings.expensesContainer;
-                html = '<div class="item clearfix" id="exp-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
+
+                // html = '<div class="item clearfix" id="exp-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
+                html = '<div class="item clearfix" id="exp-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><svg class="cancel__logo">  <use xlink:href="img/symbol-defs.svg#icon-cancel-circle"></use> </svg></button></div></div></div>'
             }
 
             //replace the place holder text with actual data
@@ -261,7 +265,7 @@ var controller = (function(budgetCtrl , UICtrl) {
     var setupEventListeners = function() {
         var DOM = UICtrl.getDOMStrings();
         document.querySelector(DOM.inputBtn).addEventListener('click' , ctrlAddItem);
-        document.addEventListener('keypress', function(event){ if(event.keyCode == 13) { ctrlAddItem(); }  });
+        document.addEventListener('keypress', function(event){ if(event.keyCode == 13) { ctrlAddItem(); }});
         document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
         document.querySelector(DOM.inputType).addEventListener('change', UICtrl.changedType)
     };
