@@ -262,9 +262,11 @@ var UIController = (function() {
 //  GLOBAL APP CONTROLLER ###############################################################################################
 var controller = (function(budgetCtrl , UICtrl) {
     
+    //All Event listeners grouped together. and they will be called by init() upon running the script.
     var setupEventListeners = function() {
         var DOM = UICtrl.getDOMStrings();
         document.querySelector(DOM.inputBtn).addEventListener('click' , ctrlAddItem);
+
         document.addEventListener('keypress', function(event){ if(event.keyCode == 13) { ctrlAddItem(); }});
         document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
         document.querySelector(DOM.inputType).addEventListener('change', UICtrl.changedType)
